@@ -1,0 +1,26 @@
+//Find the smallest rowSum or colSum, and let it be x. Place that number in the grid, and subtract x from rowSum and colSum. Continue until all the sums are satisfied.
+
+class Solution {
+public:
+    vector<vector<int>> restoreMatrix(vector<int>& rowSum, vector<int>& colSum) {
+        int i=0;
+        int j=0;
+        int n=rowSum.size();
+        int m=colSum.size();
+        vector<vector<int>> res(n,vector<int>(m,0));
+        while(i<n && j<m){
+            if(rowSum[i]<=colSum[j]){
+                res[i][j]=rowSum[i];
+                colSum[j]-=rowSum[i];
+                i++;
+            }
+            else{
+                res[i][j]=colSum[j];
+                rowSum[i]-=colSum[j];
+                j++;
+            }
+        }
+        return res;
+    }
+};
+
