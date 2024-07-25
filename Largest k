@@ -1,0 +1,55 @@
+You are given an array 
+𝐴
+A of size 
+𝑁
+N.
+
+Find the largest integer 
+𝐾
+K such that there exists a subsequence 
+𝑆
+S of length 
+𝐾
+K where 
+𝐾
+K is divisible by the number of distinct elements in 
+𝑆
+S.
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+        vector<int> a(n);
+        for (auto &it : a) {
+            cin >> it;
+        }
+        map<int, int> mp;
+        for (int i = 0; i < n; i++) {
+            mp[a[i]]++;
+        }
+        vector<int> v;
+        for (auto &it : mp) {
+            v.push_back(it.second);
+        }
+        sort(v.begin(), v.end(), greater<int>());
+        //eg: 1 2 2 2 3
+        //ans will come from taking 2 distinct elements
+        //1 2 2 2 :4/2=0 
+        //but 1 2 2 2 3 we can take only 1 2 3: 3/3 which is not the max take
+        //since 1 2 2 2 3 :5/3 not divisible 
+        int ans=0;
+        int take=0;
+        for(int i=0;i<v.size();i++){
+            take+=v[i];
+            ans=max(ans,take-take%(i+1));
+        }
+        cout << ans << "\n";
+    }
+    return 0;
+}
