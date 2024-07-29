@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int numTeams(vector<int>& rating) {
+        int n = rating.size();
+        int res = 0;
+
+        for (int i = 1; i < n - 1; ++i) {
+            int ls = 0; // Count of elements to the left of `i` that are smaller than `rating[i]`
+            int rl = 0; // Count of elements to the right of `i` that are larger than `rating[i]`
+
+            // Count `ls`
+            for (int j = 0; j < i; ++j) {
+                if (rating[j] < rating[i])
+                    ++ls;
+            }
+
+            // Count `rl`
+            for (int j = i + 1; j < n; ++j) {
+                if (rating[j] > rating[i])
+                    ++rl;
+            }
+
+            // Calculate number of increasing teams with `rating[i]` as the middle element
+            int inc_teams = ls * rl;
+
+            // Calculate number of decreasing teams with `rating[i]` as the middle element
+            int dec_teams = (i - ls) * (n-1 - i - rl);
+
+            // Update the result
+            res += inc_teams + dec_teams;
+        }
+
+        return res;
+    }
+};
