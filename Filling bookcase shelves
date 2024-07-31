@@ -1,0 +1,39 @@
+#include <vector>
+#include <algorithm>
+#include <climits>
+
+using namespace std;
+//we solve it using keep and not keep
+class Solution {
+public:
+    int solve(int i, int remWidth, int maxH, vector<vector<int>>& dp, vector<vector<int>>& books) {
+        if (i >= books.size()) {
+            return maxH;
+        }
+        if (dp[i][remWidth] != -1) {
+            return dp[i][remWidth];
+        }
+        
+        int bookH = books[i][1];
+        int bookW = books[i][0];
+        
+        int keep = INT_MAX;
+        if (remWidth >= bookW) {
+            // Case when we keep the current book on the current shelf
+            keep = solve(i + 1, remWidth - bookW, max(maxH, bookH), dp, books);
+        }
+        
+        // Case when we do not keep the current book on the current shelf (start a new shelf)
+        int notkeep = bookH + solve(i + 1, w, bookH, dp, books);
+        
+        // Return the minimum height required
+        return dp[i][remWidth] = min(keep, notkeep);
+    }
+    
+    int minHeightShelves(vector<vector<int>>& books, int shelfWidth) {
+        int n = books.size();
+        int w = shelfWidth;
+        vector<vector<int>> dp(n + 1, vector<int>(w + 1, -1));
+        return solve(0, w, 0, dp, books);
+    }
+};
