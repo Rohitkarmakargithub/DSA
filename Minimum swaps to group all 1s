@@ -1,0 +1,31 @@
+//whenever circular array u need to append the array to the end.
+//we use sliding window approach since we need to group all ones
+class Solution {
+public:
+    int minSwaps(vector<int>& nums) {
+        int total_cnt=0;
+        for(int i=0;i<nums.size();i++){
+            if(nums[i]==1)
+                total_cnt++;//count the total number of ones
+        }
+        int n=nums.size();
+        int i=0;
+        int j=total_cnt-1;//make a window of size of total number of ones
+        int cur=0;
+        for(int k=0;k<total_cnt;k++){
+            if(nums[k]==1)
+                cur++;//get the current window cnt of ones
+        }   
+        int mini=INT_MAX;
+        while(j<2*n){//sliding window
+            mini=min(mini,total_cnt-cur);//no of swaps for that window=total no of ones-cur ones
+            if(nums[i%n]==1)
+                cur--;
+            i++;
+            j++;
+            if(nums[j%n]==1)
+                cur++;
+        }
+        return mini;
+    }
+};
