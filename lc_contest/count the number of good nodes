@@ -1,0 +1,45 @@
+//3249
+
+#include <vector>
+#include <unordered_set>
+using namespace std;
+
+class Solution {
+public:
+    int countofGood = 0;
+
+    int dfs(int par, int node, vector<vector<int>>& adj) {
+        int subtreeSize = 1;  // Including the current node
+        unordered_set<int> subtreeSizes; // To keep track of child subtree sizes
+        
+        for (auto child : adj[node]) {
+            if (child == par) continue; // Avoid moving back to parent
+            
+            int curSubtreeSize = dfs(node, child, adj); // Calculate subtree size
+            subtreeSize += curSubtreeSize;
+            subtreeSizes.insert(curSubtreeSize); // Store the size of the child subtree
+        }
+
+        // Check if the node is "good"
+        if (subtreeSizes.size() <= 1) {
+            countofGood++;
+        }
+        
+        return subtreeSize;
+    }
+
+    int countGoodNodes(vector<vector<int>>& edges) {
+        int n = edges.size() + 1; // Number of nodes (edges + 1)
+        vector<vector<int>> adj(n); // Adjacency list for tree
+        
+        // Build the adjacency list
+        for (const vector<int>& edge : edges) {
+            adj[edge[0]].push_back(edge[1]);
+            adj[edge[1]].push_back(edge[0]);
+        }
+        
+        dfs(-1, 0, adj); // Start DFS from the root (node 0)
+        
+        return countofGood;
+    }
+};
