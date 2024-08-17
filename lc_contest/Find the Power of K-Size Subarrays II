@@ -1,0 +1,22 @@
+//whenever this type of question comes u use the concept of streak.
+class Solution {
+public:
+    vector<int> resultsArray(vector<int>& nums, int k) {
+        int streak=0;
+        int n=nums.size();
+        vector<int> ans;
+        for(int i=0;i<n;i++){
+            if(i==0 || nums[i-1]+1==nums[i])
+                streak++;
+            else
+                streak=1;
+            if(i+1>=k){
+                if(streak >= k)
+                    ans.push_back(nums[i]);
+                else
+                    ans.push_back(-1);
+            }
+        }
+        return ans;
+    }
+};
