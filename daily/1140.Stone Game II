@@ -19,7 +19,7 @@ public:
             
             if(person == 1) { //Alice take the max
                 result = max(result, stones + solveForAlice(piles, 0, i+x, max(M, x)));
-            } else { //Bob,for oponent take the min since he is trying to minimize alice amount,
+            } else { //Bob,for opponent take the min since he is trying to minimize alice amount,
                     //so when are taking minimum indirectly we are making the optimum move for alice
                 result = min(result, solveForAlice(piles, 1, i+x, max(M, x)));
             }
