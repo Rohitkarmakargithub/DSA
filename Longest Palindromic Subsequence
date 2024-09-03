@@ -1,0 +1,35 @@
+int solve(int start, int end, const string& s, vector<vector<int>>& dp) {
+    if (start > end)
+        return 0;
+
+    if (dp[start][end] != -1)
+        return dp[start][end];
+
+    int result = 0;
+    if (s[start] == s[end]) {
+        int cur_len = 2;
+        if (start == end) 
+            cur_len = 1;
+        result = cur_len + solve(start + 1, end - 1, s, dp);
+    } else {
+        result = max(solve(start + 1, end, s, dp), solve(start, end - 1, s, dp));
+    }
+
+    dp[start][end] = result;
+    return result;
+}
+
+int playWithWords(const string& s) {
+    int max_product = 0;
+    int n = s.size();
+
+    dp1.resize(n, vector<int>(n, -1));
+
+    for (int i = 0; i < n - 1; ++i) {
+        int left_len = solve(0, i, s, dp1);
+        int right_len = solve(i + 1, n - 1, s, dp1);
+        max_product = max(max_product, left_len * right_len);
+    }
+
+    return max_product;
+}
