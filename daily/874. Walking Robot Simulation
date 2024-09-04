@@ -1,0 +1,36 @@
+// -2: Turn left 90 degrees.
+// -1: Turn right 90 degrees.
+// 1 <= k <= 9: Move forward k units, one unit at a time.
+class Solution {
+public:
+    int robotSim(vector<int>& commands, vector<vector<int>>& obstacles) {
+        //this is not a matrix ,its a xy coordinate 
+        vector<vector<int>> dir{{0,1},{1,0},{0,-1},{-1,0}};//N E S W
+        int d=0;//intially at North
+        int res=0;
+        int x=0;
+        int y=0;
+        set<pair<int,int>> st;
+        for(int i=0;i<obstacles.size();i++){
+            st.insert(make_pair(obstacles[i][0],obstacles[i][1]));
+        }
+        for(auto c:commands){
+            if(c==-1){
+                d=(d+1)%4;
+            }else if(c==-2){
+                d=((d-1)+4)%4;
+            }else{
+                int dx=dir[d][0];
+                int dy=dir[d][1];
+                for(int i=0;i<c;i++){
+                    if(st.find(make_pair(x+dx,y+dy))!=st.end())
+                        break;
+                    x=x+dx;
+                    y=y+dy;
+                }
+                res=max(res,x*x+y*y);
+            }     
+        }
+        return res;
+    }
+};
