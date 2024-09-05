@@ -1,0 +1,47 @@
+class Solution {
+public:
+    int cnt = 0;
+    set<int> st;
+
+    void bfs(int num, int n, int m) {
+        queue<int> q;
+        q.push(num);
+        while (!q.empty()) {
+            int number = q.front();
+            q.pop();
+            
+            if (number >= n && number <= m) {
+                if (st.find(number) == st.end()) {
+                    st.insert(number);
+                    cnt++;
+                }
+            }
+            
+            // If number is zero or exceeds m, we stop processing
+            if (number == 0 || number > m) {
+                break;
+            }
+            
+            int lastDigit = number % 10;
+            
+            if (lastDigit > 0) {//for 9 : 8
+                q.push(number * 10 + (lastDigit - 1));
+            }
+            if (lastDigit < 9) {//for 0 : 1
+                q.push(number * 10 + (lastDigit + 1));
+            }
+        }
+    }
+
+    int steppingNumbers(int n, int m) {
+        if (n > m) {
+            return 0; 
+        }
+        
+        for (int i = 0; i <= 9; i++) {
+            bfs(i, n, m);
+        }
+        
+        return cnt;
+    }
+};
