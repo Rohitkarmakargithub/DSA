@@ -1,0 +1,38 @@
+
+class Solution {
+public:
+    bool isPossible(ll mid, vector<int>& start, int d) {
+        vector<int> positions = start;
+        for (int i = 0; i < positions.size() - 1; ++i) {
+            if ((ll)positions[i] + (ll)mid > positions[i + 1] + d) {
+                return false; 
+            }
+
+            else if (positions[i] + mid > positions[i + 1]) {
+                positions[i + 1] = positions[i] + mid;
+            }
+        }
+        return true;
+    }
+
+    int maxPossibleScore(vector<int>& start, int d) {
+        // Initialize binary search bounds
+        ll low = 0;
+        ll high = INT_MAX;
+        ll res = 0;
+
+        sort(start.begin(), start.end());
+
+        while (low <= high) {
+            ll mid = (low + high) / 2;//can we afford this difference
+            if (isPossible(mid, start, d)) {//if yes,try to maximize it
+                res = mid; // Update result if mid is feasible
+                low = mid + 1; // Try for a larger score
+            } else {
+                high = mid - 1; // Try for a smaller score
+            }
+        }
+
+        return res;
+    }
+};
