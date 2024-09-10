@@ -1,0 +1,43 @@
+class Solution {
+  public:
+//  A directed graph has an eulerian cycle if following conditions are true
+
+// All vertices with nonzero degree belong to a single strongly connected component. 
+// In degree is equal to the out degree for every vertex.
+    void dfs(int node,vector<int>& vis,vector<int> adj[]){
+        vis[node]=1;
+        for(auto neigh:adj[node]){
+            if(!vis[neigh]){
+                dfs(neigh,vis,adj);
+            }
+        }
+    }
+    
+    int isCircle(vector<string> &arr) {
+        vector<int> adj[26];
+        vector<int> indegree(26,0);
+        vector<int> outdegree(26,0);
+        
+        for(int i=0;i<arr.size();i++){
+            int u=arr[i][0]-'a';
+            int v=arr[i][arr[i].size()-1]-'a';
+            adj[u].push_back(v);
+            outdegree[u]++;
+            indegree[v]++;
+        }
+        
+        for(int i=0;i<26;i++){
+            if(indegree[i]!=outdegree[i])
+                return 0;
+        }
+        //to check if they are present in a single component
+        vector<int> vis(26,0);
+        dfs(arr[0][0]-'a',vis,adj);
+        
+        for(int i=0;i<26;i++){
+            if(indegree[i]>0 && !vis[i])
+                return 0;
+        }
+        return 1;
+    }
+};
