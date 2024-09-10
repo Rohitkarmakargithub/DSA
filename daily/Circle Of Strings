@@ -4,6 +4,7 @@ class Solution {
 
 // All vertices with nonzero degree belong to a single strongly connected component. 
 // In degree is equal to the out degree for every vertex.
+//if indegree is equal to the outdegree it is sure it will form a circle ,ie visiting all the nodes exactly once and returning back to the start.
     void dfs(int node,vector<int>& vis,vector<int> adj[]){
         vis[node]=1;
         for(auto neigh:adj[node]){
