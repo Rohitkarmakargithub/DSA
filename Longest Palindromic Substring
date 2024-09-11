@@ -1,0 +1,37 @@
+class Solution {
+public:
+
+    int expandAroundCenter(string str1, int left, int right) {
+        int n = str1.size();
+        while (left >= 0 && right < n && str1[left] == str1[right]) {
+            --left;
+            ++right;
+        }
+        return right - left - 1;
+    }
+
+
+    string longestPalin(string str1) {
+        if (str1.empty()) return ""; 
+
+        int n = str1.size();
+        int start = 0;
+        int maxLength = 1; 
+
+        for (int i = 0; i < n; ++i) {
+            // Check for odd-length palindromes (single character center)
+            int len1 = expandAroundCenter(str1, i, i);
+            // Check for even-length palindromes (consecutive character center)
+            int len2 = expandAroundCenter(str1, i, i + 1);
+
+            int len = max(len1, len2);
+            if (len > maxLength) {
+                maxLength = len;
+                start = i - (len - 1) / 2;
+            }
+        }
+
+        // Return the longest palindromic substring
+        return str1.substr(start, maxLength);
+    }
+};
