@@ -1,0 +1,26 @@
+// Input: s = "aaa"
+// Output: 6
+// Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
+class Solution {
+public:
+    int expandAroundCenter(int i,int j,string s){
+        int cnt=0;
+        int n=s.size();
+        while(i>=0 && j<n && s[i]==s[j]){
+            cnt++;//found one substring
+            i--;
+            j++;
+        }
+        return cnt;
+    }
+    int countSubstrings(string s) {
+        int n=s.size();  
+        int cnt1=0;
+        int cnt2=0;    
+        for(int i=0;i<n;i++){
+            cnt1 += expandAroundCenter(i,i,s);//for odd length palidromes
+            cnt2 += expandAroundCenter(i,i+1,s);//for even lenth palindromes
+        }
+        return (cnt1+cnt2);
+    }
+};
