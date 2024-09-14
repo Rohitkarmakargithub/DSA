@@ -1,0 +1,29 @@
+class Solution {
+public:
+//since we cannot recover from the loss (ie when it reaches 0), we can use kadane algorithm
+//which was applied in maximum sum subarray
+    int longestSubarray(vector<int>& nums) {
+        int cur = nums[0];
+        int maxi = nums[0];
+        int cnt = 1;
+        int maxcnt = 1;
+        for(int i = 1;i < nums.size(); i++){
+            if((nums[i] & cur) >= nums[i]){
+                cur = nums[i] & cur;
+                cnt++;
+            }else{
+                cur = nums[i];
+                cnt=1;
+            }
+            cout<<cur<<" "<<cnt<<"\n";
+            if (cur > maxi) {
+                maxi = cur;
+                maxcnt = cnt;
+            } else if(cur==maxi){
+                maxcnt=max(maxcnt,cnt);
+            }
+
+        }
+        return maxcnt;
+    }
+};
