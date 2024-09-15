@@ -1,0 +1,39 @@
+class Solution {
+public:
+//a sliding window apporach cannot be applied.
+//a unique approach with bits ,to check if that pattern has appeared or not
+    int findTheLongestSubstring(string s) {
+        int n=s.size();
+        unordered_map<string,int> mp;
+        vector<int> cur_state(5,0); //a,e,i,o,u
+        int res=0;
+        mp["00000"]=-1;
+
+        for(int i=0;i<n;i++){
+            
+            if(s[i]=='a')
+                cur_state[0] = (cur_state[0] + 1) % 2;
+            else if(s[i]=='e')
+                cur_state[1] = (cur_state[1] + 1) % 2;
+            else if(s[i]=='i')
+                cur_state[2] = (cur_state[2] + 1) % 2;
+            else if(s[i]=='o')
+                cur_state[3] = (cur_state[3] + 1) % 2;
+            else if(s[i]=='u')
+                cur_state[4] = (cur_state[4] + 1) % 2;
+
+            string curstate="";
+            for(int j=0;j<5;j++){
+                curstate+=to_string(cur_state[j]);
+            }
+
+            if(mp.find(curstate)==mp.end()){
+                mp[curstate]=i;
+            }else{
+                res=max(res, i - mp[curstate]);
+            }
+        }
+        return res;
+    
+    }
+};
