@@ -14,12 +14,12 @@ class Solution {
                 
             if(open == close)
                 max_len=max(max_len, 2 * close);
-            else if(close > open){
+            else if(close > open){//if close become greater than open there is no way to recover
                 open=0;
                 close=0;
             }
         }
-        
+        // ( ) ( ( ) ( ) 
         open=0;
         close=0;
         for(int i=n-1;i>=0;i--){
