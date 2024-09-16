@@ -1,0 +1,30 @@
+class Solution {
+public:
+//00:00 is the refernce point for calculating the number of minutes
+//["00:01","23:59","07:34","07:40"]
+    int findMinDifference(vector<string>& timePoints) {
+        int n = timePoints.size();
+        vector<int> time;
+
+   
+        for (const auto& point : timePoints) {
+            int hour = stoi(point.substr(0, 2));
+            int min = stoi(point.substr(3, 2));
+            int minutes = hour * 60 + min;
+            time.push_back(minutes);
+        }
+
+
+        sort(time.begin(), time.end());
+        int mini=INT_MAX;
+        for (int i = 0; i < n - 1; ++i) {
+            mini = min(mini, time[i + 1] - time[i]);
+        }
+
+        mini = min(mini, 1440 - time[n - 1] + time[0]);
+
+        return mini;
+    }
+};
+
+
