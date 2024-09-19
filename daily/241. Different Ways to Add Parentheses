@@ -1,0 +1,37 @@
+class Solution {
+public:
+// Input: expression = "2*3-4*5"
+// Output: [-34,-14,-10,-10,10]
+// Explanation:
+// (2*(3-(4*5))) = -34 
+// ((2*3)-(4*5)) = -14 
+// ((2*(3-4))*5) = -10 
+// (2*((3-4)*5)) = -10 
+// (((2*3)-4)*5) = 10
+//through recursion we can do it
+    vector<int> diffWaysToCompute(string expression) {
+        vector<int> ans;
+
+        for(int i=0;i<expression.size();i++){
+            if(expression[i]=='-' || expression[i]=='+'  || expression[i]=='*' ){
+                vector<int> leftans=diffWaysToCompute(expression.substr(0,i));
+                vector<int> rightans=diffWaysToCompute(expression.substr(i+1));
+                for(auto left:leftans){
+                    for(auto right:rightans){
+                        if(expression[i]=='-'){
+                            ans.push_back(left-right);
+                        }else if(expression[i]=='+'){
+                            ans.push_back(left+right);
+                        }else{
+                            ans.push_back(left * right);
+                        }
+                    }
+                }
+            }
+        }
+
+        if(ans.size()==0)
+            ans.push_back(stoi(expression));
+        return ans;
+    }
+};
