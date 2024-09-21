@@ -1,0 +1,46 @@
+class Solution {
+public:
+    bool isPossible(string word1,string word){
+        if(word1.size()!=word.size())return false;
+        int i;
+        for(i=0;i<word.size();i++){
+            if(word1[i]!=word[i] && word1[i]!=' ')
+                break;
+        }
+        if(i==word.size())return true;
+        reverse(word.begin(),word.end());
+        for(int i=0;i<word.size();i++){
+            if(word1[i]!=word[i] && word1[i]!=' ')
+                return false;
+        }
+        return true;
+    }
+    bool placeWordInCrossword(vector<vector<char>>& board, string word) {
+        //first check horizontally
+        int n=board.size();
+        int m=board[0].size();
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                while(j<m && board[i][j]=='#')j++;
+                string ch="";
+                while(j<m && board[i][j]!='#')ch+=board[i][j++];
+                if(isPossible(ch,word)){
+                    return true;
+                }
+            }
+        }
+
+        //then check vertically
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                while(j<n && board[j][i]=='#')j++;
+                string ch="";
+                while(j<n && board[j][i]!='#')ch+=board[j++][i];
+                if(isPossible(ch,word)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
