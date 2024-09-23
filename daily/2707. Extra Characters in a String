@@ -1,0 +1,29 @@
+class Solution {
+public:
+//i can either consider the character as extra or part of the substring 
+    int solve(int ind,string s,unordered_set<string> st,int n,vector<int>& dp){
+        if(ind==n)
+            return 0;
+
+        if(dp[ind]!=-1)
+            return dp[ind];
+
+        int extra = 1 + solve(ind+1,s,st,n,dp);
+        
+        int part=INT_MAX;
+        for(int j=ind;j<n;j++){
+            string sub = s.substr(ind,j-ind+1);
+            if(st.count(sub)>0){
+                part = min(part,solve(j+1,s,st,n,dp));
+            }
+        }
+        return dp[ind]=min(part,extra);
+    }
+
+    int minExtraChar(string s, vector<string>& dictionary) {
+        int n=s.size();
+        vector<int> dp(n,-1);
+        unordered_set<string> st(dictionary.begin(),dictionary.end());
+        return solve(0,s,st,n,dp);
+    }
+};
