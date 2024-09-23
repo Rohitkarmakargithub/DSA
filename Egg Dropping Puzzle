@@ -3,7 +3,7 @@ class Solution
     public:
     //Function to find minimum number of attempts needed in 
     //order to find the critical floor.
-    //in worst case
+    //we find the no of moves for each floor, eachfloor has a possibiltity of break or not break and the worst is taken ie( the max(break,notbreak)),and the minimum is taken among all the moves.
     int solve(int n,int k,vector<vector<int>>& dp){
         if(n==1 || k==0 || k==1)
             return k;
