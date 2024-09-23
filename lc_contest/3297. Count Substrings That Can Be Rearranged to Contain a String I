@@ -1,0 +1,47 @@
+vector<int> req(26);
+vector<int> hav(26);
+int matching_cnt = 0;
+
+class Solution {
+    
+    void Add (char ch) {
+        int ind = ch - 'a';
+        hav[ind] ++;
+        
+        if (hav[ind] == req[ind]) matching_cnt ++;
+    }
+    
+    void Remove (char ch) {
+        int ind = ch - 'a';
+        hav[ind] --;
+        
+        if (hav[ind] == req[ind]-1) matching_cnt --;
+    }
+    
+public:
+    long long validSubstringCount(string word1, string word2) {
+        for (int i = 0; i < 26; i ++) req[i] = hav[i] = 0;
+        matching_cnt = 0;
+        
+        for (auto c : word2) req[c-'a'] ++;
+        for (int i = 0; i < 26; i ++)
+            if (req[i] == 0) matching_cnt ++;
+        
+        int n = word1.length();
+        long long ans = 0;
+        int l = 0, r = -1;
+        
+        while (l < n) {
+            while (r+1 < n && matching_cnt < 26) {
+                r ++;
+                Add (word1[r]);
+            }
+            
+            if (matching_cnt == 26) ans += (n - r);
+            
+            Remove (word1[l]);
+            l ++;
+        }
+        return ans;
+    }
+};
