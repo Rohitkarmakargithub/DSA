@@ -1,0 +1,44 @@
+//max(a1,a2) < min(b1,b2) then the intervals (a1,b1) & (A2,b2) overlaps
+//to find overlapped region: max(a1,a2) and min(b1,b2)
+//we have to store the double bookings.
+
+// Input
+// ["MyCalendarTwo", "book", "book", "book", "book", "book", "book"]
+// [[], [10, 20], [50, 60], [10, 40], [5, 15], [5, 10], [25, 55]]
+class MyCalendarTwo {
+public:
+    vector<pair<int,int>> doubleb;
+    vector<pair<int,int>> books;
+    MyCalendarTwo() {
+        
+    }
+    
+    bool book(int start, int end) {
+        //first we need to check the double bookings for any triple booking  potential
+        if(doubleb.size()!=0){
+            for(auto dpair:doubleb){
+                int a1 = dpair.first;
+                int b1 = dpair.second;
+                if(max(a1,start) < min(b1,end)){
+                    return false;
+                }
+            }
+            //if not found any triple booking go for double booking
+        }
+        
+        int flag=0;
+        if(books.size()!=0){
+            for(auto spair:books){
+                int a1 = spair.first;
+                int b1 = spair.second;
+                if(max(a1,start) < min(b1,end)){
+                    flag=1;
+                    doubleb.push_back({max(a1,start),min(b1,end)});
+                }
+            }
+        }// 2 5    3 6 
+        books.push_back({start,end});
+        return true;
+    }
+};
+
