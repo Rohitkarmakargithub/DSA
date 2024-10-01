@@ -1,0 +1,21 @@
+class Solution {
+  public:
+    // You need to complete this function
+
+    // move n-1 disc from A to B 
+    //move 1 disk from A to C
+    //move n-1 disc from B to C
+    long long toh(int n, int from, int to, int aux) {
+        if(n==0)//if there are no discs
+            return 0;
+            
+        long long ans=0;
+        
+        ans+=toh(n-1,from,aux,to);
+        cout << "move disk " << n << " from rod " << from << " to rod " << to << "\n";
+        ans+=1;
+        ans+=toh(n-1,aux,to,from);
+        
+        return ans;
+    }
+};
