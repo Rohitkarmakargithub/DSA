@@ -1,0 +1,41 @@
+class Solution {
+public:
+    string toBinary(int num) {
+        string binary="";
+        while (num > 0) {
+            binary = to_string(num % 2) + binary;
+            num /= 2;
+        }
+        return binary.empty() ? "0" : binary;
+    }
+
+  int bi(const string& s) {
+    int res = 0;
+    int k = 0;
+    for (int i = s.size() - 1; i >= 0; i--) {  // Start from the last valid index
+        if (s[i] == '1') {
+            res += (1 << k);  // Bit-shifting instead of pow(2, k)
+        }
+        k++;
+    }
+    return res;
+}
+
+
+    int maxGoodNumber(vector<int>& nums) {
+
+        vector<string> binary;
+        for (auto num : nums) {
+            binary.push_back(toBinary(num));
+        }
+
+        return max({
+            bi(binary[0] + binary[1] + binary[2]),
+            bi(binary[0] + binary[2] + binary[1]),
+            bi(binary[1] + binary[0] + binary[2]),
+            bi(binary[1] + binary[2] + binary[0]),
+            bi(binary[2] + binary[1] + binary[0]),
+            bi(binary[2] + binary[0] + binary[1])
+        });
+    }
+};
