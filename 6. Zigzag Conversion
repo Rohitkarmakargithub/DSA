@@ -1,0 +1,30 @@
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        if (numRows == 1) return s;  
+
+        vector<vector<char>> matrix(numRows);  
+        int row = 0;
+        bool goingDown = false;
+
+        for (auto ch : s) {
+            matrix[row].push_back(ch);  
+
+            // Change direction when you reach the top or bottom row.
+            if (row == 0 || row == numRows - 1) {
+                goingDown = !goingDown;
+            }
+
+            // Move up or down.
+            row += goingDown ? 1 : -1;
+        }
+        string res = "";
+        for (auto r : matrix) {
+            for (auto c : r) {
+                res += c;
+            }
+        }
+
+        return res;
+    }
+};
