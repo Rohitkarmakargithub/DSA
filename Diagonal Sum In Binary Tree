@@ -1,0 +1,27 @@
+class Solution {
+public:
+    void func(Node* root, int level, vector<int>& res) {
+        if (root == nullptr)
+            return;
+        
+        // Ensure the vector has enough space
+        if (level >= res.size()) {
+            res.push_back(0); // Add a new level if it doesn't exist
+        }
+        
+        // Add the current node's data to the appropriate diagonal level
+        res[level] += root->data;
+        
+        // Continue to the right child on the same level
+        func(root->right, level, res);
+        
+        // Move down to the left child, which increases the diagonal level
+        func(root->left, level + 1, res);
+    }
+    
+    vector<int> diagonalSum(Node* root) {
+        vector<int> res;
+        func(root, 0, res); // Start with level 0
+        return res;
+    }
+};
