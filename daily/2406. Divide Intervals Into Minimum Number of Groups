@@ -1,0 +1,33 @@
+//we need to find the most overlapped interval
+//then it becomes similar to meeting room II
+class Solution {
+public:
+    int minGroups(vector<vector<int>>& intervals) {
+        vector<int> start;
+        vector<int> end;
+        
+        for(auto interval:intervals){
+            start.push_back(interval[0]);
+            end.push_back(interval[1]);
+        }
+
+        sort(start.begin(),start.end());
+        sort(end.begin(),end.end());
+
+        int i=0;
+        int j=0;
+        int group=0;
+        int res=0;
+        while(i<start.size() && j<end.size()){
+            if(start[i]<=end[j]){
+                group++;
+                i++;
+            }else{
+                group--;
+                j++;
+            }
+            res=max(res,group);
+        }
+        return res;
+    }
+};
