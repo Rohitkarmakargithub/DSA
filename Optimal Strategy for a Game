@@ -1,0 +1,24 @@
+class Solution {
+public:
+    long long solve_memoize(vector<long long>& arr, vector<vector<long long>>& t, int l, int r) {
+        if (t[l][r] != -1)
+            return t[l][r];
+        if (l > r)
+            return 0;
+        if (l == r)
+            return t[l][r] = arr[l];
+        if (r - l == 1)
+            return t[l][r] = max(arr[l], arr[r]);
+
+        long long sum_l = arr[l] + min(solve_memoize(arr, t, l + 2, r), solve_memoize(arr, t, l + 1, r - 1));
+        long long sum_r = arr[r] + min(solve_memoize(arr, t, l + 1, r - 1), solve_memoize(arr, t, l, r - 2));
+
+        return t[l][r] = max(sum_l, sum_r);
+    }
+
+    long long maximumAmount(int n, int arr[]) {
+        vector<long long> arrVec(arr, arr + n); // Convert the input array to a vector
+        vector<vector<long long>> t(n, vector<long long>(n, -1)); // Dynamic allocation of t
+        return solve_memoize(arrVec, t, 0, n - 1);
+    }
+};
