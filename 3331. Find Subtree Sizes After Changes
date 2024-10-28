@@ -1,0 +1,47 @@
+
+class Solution {
+public:
+    vector<vector<int>> par; 
+    vector<int> ans; 
+
+    void dfs1(int node, std::vector<std::vector<int>>& adj, vector<int>& parent, const string& s) {
+        par[s[node] - 'a'].push_back(node);
+        for (auto neigh : adj[node]) {
+            if (!par[s[neigh] - 'a'].empty()) {
+                parent[neigh] = par[s[neigh] - 'a'].back();
+            }
+            dfs1(neigh, adj, parent, s);
+        }
+        par[s[node] - 'a'].pop_back();
+    }
+
+   
+    void dfs2(int node, std::vector<std::vector<int>>& adj) {
+        ans[node] = 1; 
+        for (auto neigh : adj[node]) {
+            dfs2(neigh, adj);
+            ans[node] += ans[neigh]; 
+        }
+    }
+
+    std::vector<int> findSubtreeSizes(vector<int>& parent, const string& s) {
+        int n = s.size();
+        par.resize(26); 
+        vector<vector<int>> adj(n);
+        ans.resize(n); 
+
+        for (int i = 1; i < n; i++) {
+            adj[parent[i]].push_back(i);
+        }
+
+        dfs1(0, adj, parent, s);
+       
+        vector<vector<int>> adj1(n);
+        for (int i = 1; i < n; i++) {
+            adj1[parent[i]].push_back(i);
+        }
+        dfs2(0, adj1);
+        
+        return ans;
+    }
+};
