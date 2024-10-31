@@ -1,0 +1,36 @@
+class Solution {
+public:
+    vector<int> fact;
+    vector<vector<long long>> dp;
+    const long long INF = 1e13;
+
+    long long func(int robots, int factories, int n, int m, vector<int>& robot) {
+        if (robots == n) return 0;              
+        if (factories == m) return INF;          
+        
+        if (dp[robots][factories] != -1) return dp[robots][factories];
+
+        // Either assign the current robot to the current factory or skip this factory
+        long long assign = func(robots + 1, factories + 1, n, m, robot) + abs(fact[factories] - robot[robots]);
+        long long skip = func(robots, factories + 1, n, m, robot);
+        
+        return dp[robots][factories] = min(assign, skip);
+    }
+
+    long long minimumTotalDistance(vector<int>& robot, vector<vector<int>>& factory) {
+        for (auto& ele : factory) {
+            for (int i = 0; i < ele[1]; i++) fact.push_back(ele[0]);
+        }
+
+        int n = robot.size();  
+        int m = fact.size(); 
+
+   
+        sort(fact.begin(), fact.end());
+        sort(robot.begin(), robot.end());
+
+        dp.assign(n, vector<long long>(m, -1));
+        
+        return func(0, 0, n, m, robot);
+    }
+};
