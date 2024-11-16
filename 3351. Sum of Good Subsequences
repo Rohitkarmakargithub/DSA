@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int MOD = 1E9+7;
+
+    int sumOfGoodSubsequences(vector<int>& nums) {
+        unordered_map<int, long long> cnt;
+        unordered_map<int, long long> sum;
+
+        for (int i = 0; i < nums.size(); i++) {
+            int ele = nums[i];
+            cnt[ele] = (cnt[ele] + 1 + cnt[ele + 1] + cnt[ele - 1]) % MOD;
+            sum[ele] = (sum[ele] + ele + sum[ele + 1] % MOD + (cnt[ele + 1] * ele % MOD) 
+                        + sum[ele - 1] % MOD + (cnt[ele - 1] * ele % MOD)) % MOD;
+        }
+
+        long long res = 0;
+        for (auto entry : sum) {
+            res = (res + entry.second) % MOD;
+        }
+
+        return (int)res;
+    }
+};
