@@ -1,0 +1,48 @@
+class Solution {
+public:
+    int slidingPuzzle(vector<vector<int>>& board) {
+        vector<vector<int>> dir{{1,3},{0,2,4},{1,5},{0,4},{3,1,5},{4,2}};
+        string start = "";
+        string target = "123450";
+        for(int i=0;i<2;i++){
+            for(int j=0;j<3;j++){
+                start += to_string(board[i][j]);
+            }
+        }
+
+        queue<string> q;
+        unordered_map<string,int> vis;
+        q.push(start);
+   
+        int moves = 0;
+        while(!q.empty()){
+            int size = q.size();
+
+            for(int i=0 ;i<size ;i++){
+                auto st = q.front();
+                vis[st]++;
+                q.pop();
+
+                if(st == target)
+                    return moves;
+
+                int pos;
+                for(int j=0;j<st.size();j++){
+                    if(st[j]=='0'){
+                        pos=j;
+                        break;
+                    }   
+                }
+                for(auto neigh: dir[pos]){
+                    swap(st[neigh],st[pos]);
+                    if(!vis[st])
+                        q.push(st);
+                    swap(st[neigh],st[pos]);
+                } 
+            }
+
+            moves++;
+        }
+        return -1;
+    }
+};
