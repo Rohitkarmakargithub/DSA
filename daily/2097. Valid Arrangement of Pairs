@@ -1,0 +1,47 @@
+class Solution {
+public:
+    // In Euler path, the start node has out-in = 1, and end has in-out = 1, and all other nodes have equal out and in
+    void dfs(int start, unordered_map<int, vector<int>>& adj, vector<vector<int>>& eulerPath) {
+        while (!adj[start].empty()) {
+            int next = adj[start].back();  // Get the next node
+            adj[start].pop_back();         // Remove the edge from the adjacency list
+            dfs(next, adj, eulerPath);     // Recursive DFS call
+            eulerPath.push_back({start, next});  // Add this edge to the Euler path
+        }
+    }
+
+    vector<vector<int>> validArrangement(vector<vector<int>>& pairs) {
+        int n = pairs.size();
+        unordered_map<int, int> indegree, outdegree;
+        unordered_map<int, vector<int>> adj;
+
+        // Build the graph and calculate in-degree and out-degree
+        for (auto pair : pairs) {
+            int start = pair[0];
+            int end = pair[1];
+            adj[start].push_back(end);
+            outdegree[start]++;
+            indegree[end]++;
+        }
+
+        // Find the starting node for the Euler path
+        int start = INT_MAX;
+        for (auto entry : outdegree) {
+            int out = entry.second;
+            int in = indegree[entry.first];
+            if (out - in == 1) {
+                start = entry.first;
+                break;
+            }
+        }
+
+        if (start == INT_MAX)  // It's an Euler circuit, which means all out and in are equal
+            start = pairs[0][0];
+
+        vector<vector<int>> eulerPath;
+        dfs(start, adj, eulerPath);  // Build the Euler path
+
+        reverse(eulerPath.begin(), eulerPath.end());  // Reverse to get the correct order
+        return eulerPath;  // Return the final Euler path
+    }
+};
