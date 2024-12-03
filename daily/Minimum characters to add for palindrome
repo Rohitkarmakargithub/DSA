@@ -1,0 +1,35 @@
+class Solution {
+public:
+    void compute(vector<int>& lps,string s){
+        lps[0] = 0;
+        int i=1;
+        int n = s.size();
+        int len=0;
+        while(i < n){
+            if(s[i] == s[len]){
+                len++;
+                lps[i] = len;
+                i++;
+            }else{
+                if(len == 0){
+                    lps[i] = 0;
+                    i++;
+                }else{
+                    len = lps[len-1]; 
+                }
+            }
+        }
+    }
+    
+    int minChar(string& s) {
+        //to calculate the lps of (s # reverse of s).
+        int n = s.size(); //the length of the original string
+        string temp = s;
+        reverse(temp.begin(),temp.end());
+        s = s + "#" + temp;
+        vector<int> lps(s.size(),0);
+        compute(lps,s);
+        
+        return n - lps[s.size()-1];
+    }
+};
