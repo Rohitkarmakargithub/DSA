@@ -1,0 +1,48 @@
+class Solution {
+public:
+    void dfs(int node,int p,vector<vector<int>> adj,vector<int>& parity){
+        for(auto neigh:adj[node]){
+            if(p != neigh){
+                parity[neigh] = 1 - parity[node];
+                dfs(neigh,node,adj,parity);
+            }
+        }
+    }
+    vector<int> maxTargetNodes(vector<vector<int>>& edges1, vector<vector<int>>& edges2) {
+
+        int n = edges1.size();
+        int m = edges2.size();
+
+        vector<int> parity1(n+1,0);
+        vector<int> parity2(m+1,0);
+
+        vector<vector<int>> adj1(n+1);
+        vector<vector<int>> adj2(m+1);
+        
+        for(auto edge:edges1){
+            adj1[edge[0]].push_back(edge[1]);
+            adj1[edge[1]].push_back(edge[0]);
+        }
+
+        for(auto edge:edges2){
+            adj2[edge[0]].push_back(edge[1]);
+            adj2[edge[1]].push_back(edge[0]);
+        }
+
+        dfs(0,-1,adj1,parity1);
+        dfs(0,-1,adj2,parity2);
+        
+        vector<int> res;
+        int maxnodes = max(count(parity2.begin(),parity2.end(),0),count(parity2.begin(),parity2.end(),1));
+        int cnt0 = count(parity1.begin(),parity1.end(),0);
+        int cnt1= count(parity1.begin(),parity1.end(),1);
+        for(int i=0 ;i<(n+1) ;i++){
+            if(parity1[i]==0){
+                res.push_back(maxnodes + cnt0);
+            }else{
+                res.push_back(maxnodes + cnt1);
+            }
+        }
+        return res;
+    }
+};
