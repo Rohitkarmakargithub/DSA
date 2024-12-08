@@ -1,0 +1,38 @@
+class Solution {
+public:
+    int upperBound(vector<vector<int>>& events, int target) {
+        int low = 0, high = events.size();
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (events[mid][0] > target) 
+                high = mid;
+            else 
+                low = mid + 1;
+        }
+        return low;
+    }
+
+    int solve(int ind, int picked, vector<vector<int>>& events, int n, vector<vector<int>>& dp) {
+        if (picked == 2 || ind >= n) 
+            return 0;
+
+        if (dp[ind][picked] != -1) 
+            return dp[ind][picked];
+
+        int skip = solve(ind + 1, picked, events, n, dp);
+      
+        int valid_idx = upperBound(events, events[ind][1]);
+        int pick = events[ind][2];
+        if (valid_idx < n)
+            pick += solve(valid_idx, picked + 1, events, n, dp);
+
+        return dp[ind][picked] = max(pick, skip);
+    }
+
+    int maxTwoEvents(vector<vector<int>>& events) {
+        int n = events.size();
+        sort(events.begin(), events.end());
+        vector<vector<int>> dp(n, vector<int>(2, -1));
+        return solve(0, 0, events, n, dp);
+    }
+};
