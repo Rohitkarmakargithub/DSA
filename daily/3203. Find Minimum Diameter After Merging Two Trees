@@ -1,0 +1,48 @@
+class Solution {
+public:
+    vector<int> vis; 
+    int ans = 0; 
+
+    int find(int ind, vector<vector<int>>& adj) {
+        vis[ind] = 1;
+        int maxHeight1 = 0, maxHeight2 = 0; 
+        for (auto& neigh : adj[ind]) {
+            if (!vis[neigh]) {
+                int childHeight = find(neigh, adj); 
+                if (childHeight > maxHeight1) {
+                    maxHeight2 = maxHeight1;
+                    maxHeight1 = childHeight;
+                } else if (childHeight > maxHeight2) {
+                    maxHeight2 = childHeight;
+                }
+            }
+        }
+        ans = max(ans, maxHeight1 + maxHeight2); 
+        return maxHeight1 + 1;
+    }
+
+    int calculateDiameter(vector<vector<int>>& edges, int n) {
+        vector<vector<int>> adj(n);
+        for (auto& edge : edges) {
+            adj[edge[0]].push_back(edge[1]);
+            adj[edge[1]].push_back(edge[0]);
+        }
+        vis.assign(n, 0); 
+        ans = 0; 
+        find(0, adj); 
+        return ans;
+    }
+
+    int minimumDiameterAfterMerge(vector<vector<int>>& edges1, vector<vector<int>>& edges2) {
+        int n = edges1.size()+1;
+        int m = edges2.size()+1;
+
+        int diameter1 = calculateDiameter(edges1, n);
+        int diameter2 = calculateDiameter(edges2, m);
+
+        int radius1 = (diameter1 + 1) / 2;
+        int radius2 = (diameter2 + 1) / 2;
+
+        return max(1 + radius1 + radius2, max(diameter1, diameter2));
+    }
+};
