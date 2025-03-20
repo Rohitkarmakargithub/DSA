@@ -1,0 +1,43 @@
+class Solution {
+public:
+    vector<int> parent;
+    vector<int> cost;
+    
+    int find(int u) {
+        if (parent[u] == -1) return u;
+        return parent[u] = find(parent[u]); 
+    }
+
+    void merge(int u, int v, int wt) {
+        int par1 = find(u);
+        int par2 = find(v);
+        
+        if (par1 != par2) {
+            parent[par2] = par1;  
+        }
+        
+        cost[par1] = (cost[par1] == -1 ? wt : cost[par1] & wt);
+        cost[par1] &= cost[par2];
+    }
+
+    vector<int> minimumCost(int n, vector<vector<int>>& edges, vector<vector<int>>& queries) {
+        parent.assign(n, -1);
+        cost.assign(n, -1);
+
+        for (auto& edge : edges) {
+            int u = edge[0], v = edge[1], wt = edge[2];
+            merge(u, v, wt);
+        }
+
+        vector<int> res;
+        for (auto& q : queries) {
+            int start = q[0], end = q[1];
+            if (find(start) != find(end)) 
+                res.push_back(-1);
+            else 
+                res.push_back(cost[find(start)]);
+        }
+
+        return res;
+    }
+};
