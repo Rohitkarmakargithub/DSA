@@ -1,0 +1,51 @@
+class Solution {
+public:
+    bool checkValidCuts(int n, vector<vector<int>>& rectangles) {
+        vector<vector<int>> xpart, ypart;
+        vector<vector<int>> mergex, mergey;
+
+        for(auto rec : rectangles){
+            xpart.push_back({rec[0], rec[2]});
+            ypart.push_back({rec[1], rec[3]});
+        }
+
+        sort(xpart.begin(), xpart.end());
+        sort(ypart.begin(), ypart.end());
+
+        int m = xpart.size();
+        int i = 1;
+        int start = xpart[0][0];
+        int end = xpart[0][1];
+
+        while(i < m){
+            while(i < m && xpart[i][0] < end){
+                end = max(end, xpart[i][1]);
+                i++;
+            }
+            mergex.push_back({start, end});
+            if(i < m){
+                start = xpart[i][0];
+                end = xpart[i][1];
+            }
+        }
+
+        m = ypart.size();
+        i = 1;
+        start = ypart[0][0];
+        end = ypart[0][1];
+
+        while(i < m){
+            while(i < m && ypart[i][0] < end){
+                end = max(end, ypart[i][1]);
+                i++;
+            }
+            mergey.push_back({start, end});
+            if(i < m){
+                start = ypart[i][0];
+                end = ypart[i][1];
+            }
+        }
+
+        return (mergex.size() >= 3 || mergey.size() >= 3);
+    }
+};
