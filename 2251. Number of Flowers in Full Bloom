@@ -1,0 +1,33 @@
+#define ll long long
+
+class Solution {
+public:
+    vector<int> fullBloomFlowers(vector<vector<int>>& flowers, vector<int>& people) {
+        map<ll,ll> diff;
+        
+        for (auto &f : flowers) {
+            diff[f[0]]++;       // Flower starts blooming
+            diff[f[1] + 1]--;   // Flower stops blooming after f[1]
+        }
+
+        map<ll,ll> bloomCount; // time → count of blooming flowers
+        ll curr = 0;
+        for (auto &[time, delta] : diff) {
+            curr += delta;
+            bloomCount[time] = curr;
+        }
+
+        vector<int> res;
+        for (int arrival : people) {
+            auto it = bloomCount.upper_bound(arrival); // first time > arrival
+            if (it == bloomCount.begin()) {
+                res.push_back(0); // no flower has started blooming
+            } else {
+                --it;
+                res.push_back(it->second); // count of flowers at arrival time
+            }
+        }
+
+        return res;
+    }
+};
