@@ -1,0 +1,24 @@
+class Solution {
+public:
+    long long maximumValueSum(vector<int>& nums, int k, vector<vector<int>>& edges) {
+        int n = nums.size();
+        int positive_changes = 0;
+        long long optimal_sum = 0;
+        int minimum_decrease = INT_MAX;
+
+        for (int i = 0; i < n; i++) {
+            int xored = nums[i] ^ k;
+            if (xored > nums[i]) {
+                positive_changes++;
+                optimal_sum += xored;
+                minimum_decrease = min(minimum_decrease, xored - nums[i]);
+            } else {
+                optimal_sum += nums[i];
+                minimum_decrease = min(minimum_decrease, nums[i] - xored);
+            }
+        }
+
+        if (positive_changes % 2 == 0) return optimal_sum;
+        return optimal_sum - minimum_decrease;
+    }
+};
