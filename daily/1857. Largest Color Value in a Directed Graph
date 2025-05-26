@@ -1,0 +1,55 @@
+class Solution {
+public:
+    int largestPathValue(string colors, vector<vector<int>>& edges) {
+        int n = colors.size();
+        int m = edges.size();
+        vector<vector<int>> adj(n);
+        vector<int> indegree(n, 0);
+        
+        queue<int> q; //will store the nodes with zero indegree
+        for(auto edge : edges) {
+            int u =edge[0];
+            int v = edge[1];
+            adj[u].push_back(v);
+            indegree[v]++;
+        }
+
+        vector<vector<int>> dp(n, vector<int>(26, 0));
+
+        for(int i = 0 ; i < n ; i++) {
+            if(indegree[i] == 0) {
+                q.push(i);
+                dp[i][colors[i]-'a'] = 1;
+            }
+        }
+
+        int ans = 0;
+        int count = 0;
+        while(!q.empty()) {
+            auto node = q.front();
+            q.pop();
+            
+            count++;
+
+            for(int i=0; i<26 ;i++) 
+                ans = max(ans, dp[node][i]);
+
+            for(auto neigh : adj[node]) {
+                indegree[neigh]--;
+
+                for(int i=0; i<26 ;i++) {
+                    dp[neigh][i] = max(dp[neigh][i], dp[node][i] + (i == colors[neigh]-'a'));
+                }
+
+                if(indegree[neigh] == 0)
+                    q.push(neigh);
+            }
+        }
+
+        if(count < n)
+            return -1;
+
+        return ans ;        
+    }
+};
+// each node will store the values for each color , and that will be the maximum color it will storing 
