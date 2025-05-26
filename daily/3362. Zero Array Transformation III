@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int maxRemoval(vector<int>& nums, vector<vector<int>>& queries) {
+        sort(queries.begin(), queries.end());
+        int n = nums.size();
+        int m = queries.size();
+
+        // my first aim will be to make that arr[i] at pos i zero
+        priority_queue<int> potential;
+        priority_queue<int, vector<int>, greater<int>> past;
+
+        int j = 0;
+        int used = 0;
+
+        for (int i = 0; i < n; i++) {
+            while (j < m && queries[j][0] == i) {
+                potential.push(queries[j][1]);
+                j++;
+            }
+
+            nums[i] = nums[i] - past.size();
+
+            while (nums[i] > 0 && !potential.empty() && potential.top() >= i) {
+                nums[i] = nums[i] - 1;
+                used++;
+                past.push(potential.top());
+                potential.pop();
+            }
+ 
+            if (nums[i] > 0)
+                return -1;
+
+            while (!past.empty() && past.top() <= i)
+                past.pop();
+        }
+        cout << m;
+        return (m - used);
+    }
+};
