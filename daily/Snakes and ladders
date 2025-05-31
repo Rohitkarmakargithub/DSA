@@ -38,15 +38,18 @@ public:
     }
 
  
-    pair<int, int> getCoord(int s) {
-        int row = n-1-(s-1)/n;
-        
-        int col = (s-1)%n;
-        
-        if((n%2==1 && row%2==1)||(n%2==0 && row%2==0))
-            col = n-1-col;
-        
-        return make_pair(row, col);
+ private:
+    pair<int, int> getCoordinates(int num, int n) {
+        // Convert from 1D number to 2D board position
+        int r = n- (num + n - 1) / n;
+        int c = (num - 1) % n;
+
+        // Handle Boustrophedon (zigzag)
+        if ((n - r) % 2 == 0) {
+            c = n - 1 - c;
+        }
+
+        return {r, c};
     }
 
 };
