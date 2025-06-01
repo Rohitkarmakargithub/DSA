@@ -1,0 +1,84 @@
+class Solution {
+public:
+    struct State {
+        int x, y, mask, energy, dist;
+    };
+
+    vector<vector<int>> dir{{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+
+    int minMoves(vector<string>& classroom, int initial_energy) {
+        int m = classroom.size();
+        int n = classroom[0].size();
+
+        pair<int, int> start;
+        map<pair<int, int>, int> mp;
+        int id = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (classroom[i][j] == 'S') {
+                    start = {i, j};
+                } else if (classroom[i][j] == 'L') {
+                    mp[{i, j}] = id++;
+                }
+            }
+        }
+
+        int nodes = id;
+        queue<State> q;
+
+        bool vis[20][20][1 << 10][51]; // Assuming constraints fit
+        memset(vis, false, sizeof(vis));
+
+        int start_mask = 0;
+
+        q.push({start.first, start.second, start_mask, initial_energy, 0});
+        vis[start.first][start.second][start_mask][initial_energy] = true;
+
+        int ans = INT_MAX;
+
+        while (!q.empty()) {
+            auto [x, y, mask, energy, dist] = q.front();
+            q.pop();
+
+            if (mask == ((1 << nodes) - 1))
+                return dist;
+
+            if (energy == 0)
+                continue;
+
+            for (int d = 0; d < 4; d++) {
+                int nx = x + dir[d][0];
+                int ny = y + dir[d][1];
+
+                if (nx >= 0 && nx < m && ny >= 0 && ny < n &&
+                    classroom[nx][ny] != 'X') {
+                    int new_energy = energy - 1;
+
+                    if (new_energy < 0)
+                        continue;
+
+                    if (classroom[nx][ny] == 'R') {
+                        new_energy = initial_energy; // No cost for 'R'
+                    }
+
+                    int new_mask = mask;
+                    if (mp.count({nx, ny})) {
+                        new_mask |= (1 << mp[{nx, ny}]);
+                    }
+
+                    if (!vis[nx][ny][new_mask][new_energy]) {
+                        vis[nx][ny][new_mask][new_energy] = true;
+                        q.push({nx, ny, new_mask, new_energy, dist + 1});
+                    }
+                }
+            }
+        }
+
+        return ((ans == INT_MAX) ? -1 : ans);
+    }
+};
+
+// R L
+// S L
+// L R
