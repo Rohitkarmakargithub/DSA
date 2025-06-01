@@ -1,0 +1,49 @@
+// ✳️ Number of integer solutions to y + z = rem where 0 ≤ y ≤ limit and 0 ≤ z ≤ limit
+// To find how many such (y, z) pairs exist:
+
+// We fix the total: y + z = rem.
+
+// Then, for every y from lower to upper, z = rem - y is automatically decided.
+
+// The bounds for y are:
+
+// lower = max(0, rem - limit) → to ensure z ≤ limit
+
+// upper = min(limit, rem) → to ensure y ≤ limit
+
+// Thus, valid values for y lie in the range:
+
+// lower
+// ≤
+// 𝑦
+// ≤
+// upper
+// lower≤y≤upper
+// The number of such integers y is:
+
+// (upper - lower + 1)
+// (upper - lower + 1)
+// Each valid y gives a valid z = rem - y, so this is exactly the number of valid (y, z) pairs.
+
+
+
+
+class Solution {
+public:
+    long long distributeCandies(int n, int limit) {
+        long long ways = 0 ;
+        for(int x = 0; x <= min(n, limit); x++) {
+            if(n - x > 2 * limit)
+                continue;
+            
+            int rem = n - x;
+            
+            int lower = max(0, n - x - limit);
+            int upper = min(limit, n-x);
+
+            ways += (upper - lower) + 1;
+        }
+
+        return ways;
+    }
+};
