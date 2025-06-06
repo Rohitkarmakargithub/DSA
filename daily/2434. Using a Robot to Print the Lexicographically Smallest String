@@ -1,0 +1,41 @@
+class Solution {
+public:
+   
+    int minimum_Freq(const vector<int>& freq) {
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] > 0)
+                return i;
+        }
+        return -1; // No character left
+    }
+
+    string robotWithString(string s) {
+        int n = s.size();
+        string paper = "";
+
+        vector<int> freq(26, 0);
+        for (int i = 0; i < n; i++)
+            freq[s[i] - 'a']++;
+
+        stack<int> stk;
+        for (int i = 0; i < n; i++) {
+            int ch = s[i] - 'a';
+            stk.push(ch);
+            freq[ch]--;
+
+            // Try to pop from stack to paper if top is smallest possible
+            while (!stk.empty() && stk.top() <= minimum_Freq(freq)) {
+                paper += (stk.top() + 'a');
+                stk.pop();
+            }
+        }
+
+        // Pop any remaining characters
+        while (!stk.empty()) {
+            paper += (stk.top() + 'a');
+            stk.pop();
+        }
+
+        return paper;
+    }
+};
