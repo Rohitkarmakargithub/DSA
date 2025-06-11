@@ -1,0 +1,44 @@
+class Solution {
+public:
+    int maxTotalFruits(vector<vector<int>>& fruits, int startPos, int k) {
+        int size = 2e5 + 10;
+        vector<int> prefix(size, 0);
+
+        // Fill fruit positions
+        for (auto& f : fruits) {
+            prefix[f[0]] += f[1];
+        }
+
+        // Compute prefix sum
+        for (int i = 1; i < size; ++i) {
+            prefix[i] += prefix[i - 1];
+        }
+
+        // Helper to get sum from l to r safely
+        auto getSum = [&](int l, int r) {
+            if (l < 0) l = 0;
+            if (r >= size) r = size - 1;
+            return prefix[r] - (l > 0 ? prefix[l - 1] : 0);
+        };
+
+        int ans = 0;
+
+        // Case 1: Go left first, then right
+        for (int left = 0; left <= k; ++left) {
+            int right = k - 2 * left;
+            int l = startPos - left;
+            int r = startPos + max(0, right); // right could be < 0
+            ans = max(ans, getSum(l, r));
+        }
+
+        // Case 2: Go right first, then left
+        for (int right = 0; right <= k; ++right) {
+            int left = k - 2 * right;
+            int l = startPos - max(0, left); // left could be < 0
+            int r = startPos + right;
+            ans = max(ans, getSum(l, r));
+        }
+
+        return ans;
+    }
+};
