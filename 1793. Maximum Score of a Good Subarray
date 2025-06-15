@@ -1,0 +1,38 @@
+class Solution {
+public:
+    int maximumScore(vector<int>& nums, int k) {
+        int n = nums.size();
+        int left = k;
+        int right = k;
+        int result = nums[k] * (right - left + 1);
+
+        left = left - 1;
+        right = right + 1;
+        int mini = nums[k];
+
+        while (left >= 0 && right < n) {
+            if (nums[left] > nums[right]) {
+                mini = min(mini, nums[left]);
+                result = max(result, mini * (right - left));
+                left--;
+            } else {
+                mini = min(mini, nums[right]);
+                result = max(result, mini * (right - left ));
+                right++;
+            }
+        }
+
+        while (left >= 0) {
+            mini = min(mini, nums[left]);
+            result = max(result, mini * (right - left ));
+            left--;
+        }
+        while (right < n) {
+            mini = min(mini, nums[right]);
+            result = max(result, mini * (right - left ));
+            right++;
+        }
+
+        return result;
+    }
+};
