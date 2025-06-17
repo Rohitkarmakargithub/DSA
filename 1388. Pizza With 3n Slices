@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int dp[505][170];
+
+    int solve(int ind, int taken, int n, vector<int>& arr) {
+        if (taken == n) return 0;
+        if (ind >= arr.size()) return INT_MIN;
+
+        if (dp[ind][taken] != -1) return dp[ind][taken];
+
+        int take = arr[ind] + solve(ind + 2, taken + 1, n, arr);
+        int skip = solve(ind + 1, taken, n, arr);
+
+        return dp[ind][taken] = max(take, skip);
+    }
+
+    int maxSizeSlices(vector<int>& slices) {
+        int n = slices.size() / 3;
+
+        vector<int> arr1(slices.begin(), slices.end() - 1);
+        vector<int> arr2(slices.begin() + 1, slices.end());
+
+        memset(dp, -1, sizeof(dp));
+        int case1 = solve(0, 0, n, arr1);
+
+        memset(dp, -1, sizeof(dp));
+        int case2 = solve(0, 0, n, arr2);
+
+        return max(case1, case2);
+    }
+};
