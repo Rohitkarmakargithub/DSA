@@ -1,0 +1,39 @@
+class Solution {
+  public:
+    vector<int> largestSubset(vector<int>& arr) {
+        int n = arr.size();   
+        vector<int> res;
+        
+        vector<int> index(n, -1);
+        vector<int> dp(n, 1);
+        
+        sort(arr.rbegin(), arr.rend());
+        
+        int maxlen = 0;
+        int maxindex = -1;
+        for(int  i = 0 ; i < n ; i++) {
+            for(int  j = 0 ; j < i ; j++) {
+                if(arr[j] % arr[i] == 0 && 1 + dp[j] > dp[i]) {
+                    dp[i] = 1 + dp[j];
+                    index[i] = j;
+                    
+                  
+                }
+            }
+            if(dp[i] > maxlen) {
+                maxlen = dp[i];
+                maxindex = i;
+            }
+        }
+        
+        
+        // 4 5 15 88   
+        while(maxindex != -1) {
+            res.push_back(arr[maxindex]);
+            maxindex = index[maxindex];
+        }
+        
+        
+        return res;
+    }
+};
