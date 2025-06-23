@@ -1,0 +1,49 @@
+class Solution {
+public:
+    string basek(long long num, int k) {
+        string res = "";
+        while (num > 0) {
+            res = char('0' + num % k) + res;  // prepend the digit
+            num /= k;
+        }
+        return res;
+    }
+
+    bool isPalindrome(string s) {
+        int i = 0, j = s.size() - 1;
+        while (i < j) {
+            if (s[i] != s[j]) return false;
+            i++; j--;
+        }
+        return true;
+    }
+
+    long long kMirror(int k, int n) {
+        int l = 1; // current palindrome length
+        long long res = 0;
+
+        while (n > 0) {
+            int halflength = (l + 1) / 2;
+            int min_num = pow(10, halflength - 1);
+            int max_num = pow(10, halflength) - 1;
+
+            for (int num = min_num; num <= max_num; num++) {
+                string first_half = to_string(num);
+                string second_half = first_half;
+                reverse(second_half.begin(), second_half.end());
+                string pal = (l % 2 == 0) ? (first_half + second_half) : (first_half + second_half.substr(1));
+
+                long long number = stoll(pal);
+                if (isPalindrome(basek(number, k))) {
+                    res += number;  // fix here
+                    n--;
+                    if (n == 0) break;
+                }
+            }
+
+            l++;
+        }
+
+        return res;
+    }
+};
