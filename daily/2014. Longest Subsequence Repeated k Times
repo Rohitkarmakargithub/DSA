@@ -1,0 +1,60 @@
+class Solution {
+public:
+    string result = "";
+
+    bool isSubsequence(string curr, string s, int k) {
+        int i = 0, j = 0;
+        int count = 0;
+        while (i < s.size() && count < k) {
+            if (s[i] == curr[j]) {
+                j++;
+                if (j == curr.size()) {
+                    j = 0;
+                    count++;
+                }
+            }
+            i++;
+        }
+        return count == k;
+    }
+
+    void func(string curr, string& s, vector<bool>& canUse, vector<int>& freq, int k, int maxlen) {
+        if (curr.size() > maxlen) return;
+
+        if (curr.size() > result.size() || (curr.size() == result.size() && curr > result)) {
+            if (isSubsequence(curr, s, k)) {
+                result = curr;
+            }
+        }
+
+        for (int i = 25; i >= 0; i--) {  // Try characters in reverse lex order for max result
+            if (canUse[i] && freq[i] > 0) {
+                freq[i]--;
+                curr.push_back('a' + i);
+                func(curr, s, canUse, freq, k, maxlen);
+                curr.pop_back();
+                freq[i]++;
+            }
+        }
+    }
+
+    string longestSubsequenceRepeatedK(string s, int k) {
+        int n = s.size();
+        int maxlen = n / k;
+
+        vector<int> freq(26, 0);
+        for (char c : s) freq[c - 'a']++;
+
+        vector<bool> canUse(26, false);
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] >= k) {
+                canUse[i] = true;
+                freq[i] /= k;  // we can use at most freq[i]/k characters
+            }
+        }
+
+        func("", s, canUse, freq, k, maxlen);
+
+        return result;
+    }
+};
