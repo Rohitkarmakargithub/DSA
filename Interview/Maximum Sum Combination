@@ -1,0 +1,37 @@
+class Solution {
+public:
+    vector<int> topKSumPairs(vector<int>& a, vector<int>& b, int k) {
+        int n = a.size();
+        vector<int> res;
+
+        sort(a.rbegin(), a.rend()); // sort in descending
+        sort(b.rbegin(), b.rend());
+
+        priority_queue<pair<int, pair<int, int>>> maxheap;
+        set<pair<int, int>> vis;
+
+        maxheap.push({a[0] + b[0], {0, 0}});
+        vis.insert({0, 0});
+
+        while (res.size() < k && !maxheap.empty()) {
+            int sum = maxheap.top().first;
+            pair<int,int> indices = maxheap.top().second;
+            maxheap.pop();
+
+            int i = indices.first, j = indices.second;
+            res.push_back(sum);
+
+            if (i + 1 < n && !vis.count({i + 1, j})) {
+                maxheap.push({a[i + 1] + b[j], {i + 1, j}});
+                vis.insert({i + 1, j});
+            }
+
+            if (j + 1 < n && !vis.count({i, j + 1})) {
+                maxheap.push({a[i] + b[j + 1], {i, j + 1}});
+                vis.insert({i, j + 1});
+            }
+        }
+
+        return res;
+    }
+};
