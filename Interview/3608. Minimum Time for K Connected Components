@@ -1,0 +1,52 @@
+class Solution {
+public:
+    vector<int> parent;
+
+    int find(int node) {
+        if(parent[node] != node)
+            parent[node] = find(parent[node]); // path compression
+        return parent[node];
+    }
+
+    bool union1(int node1, int node2) {
+        int parent1 = find(node1);
+        int parent2 = find(node2);
+        if(parent1 == parent2)
+            return false;
+
+        parent[parent2] = parent1;
+            
+        return true;
+    }
+
+    static bool comp(const vector<int>& a, const vector<int>& b) {
+        return a[2] > b[2]; // Sort in descending order of weight
+    }
+
+    int minTime(int n, vector<vector<int>>& edges, int k) {
+        if(edges.empty()) return 0;
+
+        parent.resize(n);
+        for(int i = 0; i < n; i++) parent[i] = i;
+
+        sort(edges.begin(), edges.end(), comp); 
+
+        int componentCount = n; 
+        int ans = edges[0][2];
+
+        for(auto& edge : edges) {
+            int u = edge[0], v = edge[1];
+            if(union1(u, v)) {
+                componentCount--;
+            }
+            if(componentCount < k) {
+                ans = edge[2];
+                break;
+            }
+        }
+
+        if(componentCount >= k)
+            return 0;
+        return ans;
+    }
+};
