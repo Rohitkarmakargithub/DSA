@@ -1,0 +1,47 @@
+class Solution {
+public:
+    long long maxFreeTime(long long eventTime, vector<int>& start, vector<int>& end) {
+        int n = start.size();
+        vector<bool> q(n, false);
+
+        long long t1 = 0;
+        long long t2 = 0;
+
+        for (int i = 0; i < n; i++) {
+
+            if (t1 >= (end[i] - start[i]))
+                q[i] = true;
+
+            if (i > 0)
+                t1 = max(t1, (long long)start[i] - end[i - 1]);
+            else
+                t1 = max(t1, (long long)start[i]); 
+
+            int j = n - 1 - i;
+            if (t2 >= (end[j] - start[j]))
+                q[j] = true;
+
+      
+            if (j < n - 1)
+                t2 = max(t2, (long long)start[j + 1] - end[j]);
+            else
+                t2 = max(t2, eventTime - end[j]);
+
+        }
+
+        long long maxi = 0;
+        for (int i = 0; i < n; i++) {
+            long long leftGap = (i > 0) ? (long long)start[i] - end[i - 1] : start[i];
+            long long duration = (long long)end[i] - start[i];
+            long long rightGap = (i < n - 1) ? (long long)start[i + 1] - end[i] : eventTime - end[i];
+
+            if (q[i]) {
+                maxi = max(maxi, leftGap + duration + rightGap);
+            } else {
+                maxi = max(maxi, leftGap + rightGap);
+            }
+        }
+
+        return maxi;
+    }
+};
