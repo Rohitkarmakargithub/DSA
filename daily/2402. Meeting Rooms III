@@ -1,0 +1,55 @@
+class Solution {
+public:
+    int mostBooked(int rooms, vector<vector<int>>& meetings) {
+        int n = meetings.size();
+
+        // Sort meetings by start time
+        sort(meetings.begin(), meetings.end());
+
+        // Min-heap for available rooms by room number
+        priority_queue<int, vector<int>, greater<int>> free_rooms;
+        for (int i = 0; i < rooms; i++) free_rooms.push(i);
+
+        // Min-heap for occupied rooms: {end_time, room_id}
+        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<>> busy;
+
+        // Usage count
+        vector<int> used(rooms, 0);
+
+        for (auto& meeting : meetings) {
+            long long start = meeting[0];
+            long long end = meeting[1];
+
+            // Free up rooms that have ended
+            while (!busy.empty() && busy.top().first <= start) {
+                free_rooms.push(busy.top().second);
+                busy.pop();
+            }
+
+            if (!free_rooms.empty()) {
+                // Use the lowest-numbered available room
+                int room = free_rooms.top();
+                free_rooms.pop();
+                busy.push({end, room});
+                used[room]++;
+            } else {
+                // No room is free — delay meeting to the earliest ending room
+                auto [end_time, room] = busy.top();
+                busy.pop();
+                busy.push({end_time + (end - start), room});
+                used[room]++;
+            }
+        }
+
+        // Find the room used the most
+        int max_use = 0, res = 0;
+        for (int i = 0; i < rooms; i++) {
+            if (used[i] > max_use) {
+                max_use = used[i];
+                res = i;
+            }
+        }
+
+        return res;
+    }
+};
